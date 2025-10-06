@@ -1,0 +1,139 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ExerciseType {
+  exercise
+  rest
+}
+
+enum MeasurementType {
+  time
+  reps
+}
+
+model Exercise {
+  exerciseId             String          @id @default(cuid())
+  type           ExerciseType
+  measurementType MeasurementType
+  duration       Int?            // for time-based exercises and rest
+  reps           Int?            // for rep-based exercises
+  isEachSide     Boolean?        // for rep-based exercises
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  // Relations
+  translations   ExerciseTranslation[]
+  equipments     ExerciseEquipment[]
+  targetBodyParts ExerciseTargetBodyPart[]
+  gifs           ExerciseGif[]
+
+  @@map("exercises")
+}
+
+model ExerciseTranslation {
+  exerciseTranslationId          String       @id @default(cuid())
+  exerciseId  String
+  locale      String
+  name        String
+  desc        String
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  // Relations
+  exercise    Exercise     @relation(fields: [exerciseId], references: [exerciseId], onDelete: Cascade)
+  steps       ExerciseStep[]
+
+  @@unique([exerciseId, locale])
+  @@map("exercise_translations")
+}
+
+model ExerciseStep {
+  exerciseStepId                    String               @id @default(cuid())
+  exerciseTranslationId String
+  value                 String
+  order                 Int
+  createdAt             DateTime             @default(now())
+  updatedAt             DateTime             @updatedAt
+
+  // Relations
+  exerciseTranslation   ExerciseTranslation  @relation(fields: [exerciseTranslationId], references: [exerciseTranslationId], onDelete: Cascade)
+
+  @@map("exercise_steps")
+}
+
+model Equipment {
+  equipmentId    String   @id @default(cuid())
+  label String
+  value String   @unique
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  exercises ExerciseEquipment[]
+
+  @@map("equipments")
+}
+
+model ExerciseEquipment {
+  exerciseEquipmentId         String   @id @default(cuid())
+  exerciseId String
+  equipmentId String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // Relations
+  exercise   Exercise @relation(fields: [exerciseId], references: [exerciseId], onDelete: Cascade)
+  equipment  Equipment @relation(fields: [equipmentId], references: [equipmentId], onDelete: Cascade)
+
+  @@map("exercise_equipments")
+}
+
+model TargetBodyPart {
+  targetBodyPartId    String   @id @default(cuid())
+  label String
+  value String   @unique
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  // Relations
+  exercises ExerciseTargetBodyPart[]
+
+  @@map("target_body_parts")
+}
+
+model ExerciseTargetBodyPart {
+  exerciseTargetBodyPartId                String          @id @default(cuid())
+  exerciseId        String
+  targetBodyPartId  String
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  // Relations
+  exercise          Exercise        @relation(fields: [exerciseId], references: [exerciseId], onDelete: Cascade)
+  targetBodyPart    TargetBodyPart  @relation(fields: [targetBodyPartId], references: [targetBodyPartId], onDelete: Cascade)
+
+  @@map("exercise_target_body_parts")
+}
+
+model ExerciseGif {
+  exerciseGifId         String   @id @default(cuid())
+  exerciseId String
+  size       Int      // 180, 360, 720, 1080
+  url        String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // Relations
+  exercise   Exercise @relation(fields: [exerciseId], references: [exerciseId], onDelete: Cascade)
+
+  @@map("exercise_gifs")
+}
