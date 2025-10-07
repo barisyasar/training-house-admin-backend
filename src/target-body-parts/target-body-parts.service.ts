@@ -7,13 +7,17 @@ export class TargetBodyPartsService {
 
   async getAllTargetBodyPartsMinimal() {
     return this.prisma.targetBodyPart.findMany({
-      orderBy: {
-        label: 'asc',
-      },
-      /*     fields: {
-        label: true,
+      select: {
         targetBodyPartId: true,
-      }, */
+        translations: {
+          where: {
+            locale: 'en-US',
+          },
+          select: {
+            label: true,
+          },
+        },
+      },
     });
   }
 }

@@ -1,16 +1,19 @@
 import { PrismaClient } from '@prisma/client';
 import * as fs from 'fs';
 import * as path from 'path';
-import { randomUUID } from 'crypto';
 import cleanDatabase from './clear-db';
 import seedEquipment from './equipment-seed';
 import seedTargetBodyParts from './target-body-part-seed';
 import seedExercises from './exercise-seed';
+import seedCategories from './category-seed';
+import seedGoals from './goal-seed';
+import seedPlans from './plan-seed';
+import seedPublicWorkouts from './public-workout-seed';
 
 const prisma = new PrismaClient();
 
 // Import all exercise files
-const exercisesDir = path.join(__dirname, 'exercises');
+const exercisesDir = path.join(__dirname, '..', 'exercises');
 console.log('📂 Exercises directory:', exercisesDir);
 
 const exerciseFiles = fs
@@ -43,7 +46,11 @@ async function main() {
 
   await seedEquipment();
   await seedTargetBodyParts();
+  await seedCategories();
+  await seedGoals();
+  await seedPlans();
   await seedExercises(exercises);
+  await seedPublicWorkouts();
 
   console.log('✅ Seed completed successfully!');
 }

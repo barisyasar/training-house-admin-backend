@@ -3,24 +3,55 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 const exerciseEquipmentOptions = [
-  { value: 'dumbbell', label: 'Dumbbell' },
-  { value: 'chair', label: 'Chair' },
-  { value: 'towel', label: 'Towel' },
-  { value: 'bottle', label: 'Bottle' },
-  { value: 'two-bottles', label: 'Two Bottles' },
+  {
+    translations: [
+      { locale: 'en-US', label: 'dumbbell' },
+      { locale: 'tr-TR', label: 'dambıl' },
+    ],
+  },
+  {
+    translations: [
+      { locale: 'en-US', label: 'chair' },
+      { locale: 'tr-TR', label: 'sandalye' },
+    ],
+  },
+  {
+    translations: [
+      { locale: 'en-US', label: 'towel' },
+      { locale: 'tr-TR', label: 'havlu' },
+    ],
+  },
+  {
+    translations: [
+      { locale: 'en-US', label: 'bottle' },
+      { locale: 'tr-TR', label: 'şişe' },
+    ],
+  },
+  {
+    translations: [
+      { locale: 'en-US', label: 'two bottles' },
+      { locale: 'tr-TR', label: 'iki şişe' },
+    ],
+  },
 ];
 
 async function seedEquipment() {
   console.log('Creating equipment options...');
   for (const equipment of exerciseEquipmentOptions) {
-    await prisma.equipment.upsert({
-      where: { value: equipment.value },
-      update: {},
-      create: {
-        label: equipment.label,
-        value: equipment.value,
-      },
+    const createdEquipment = await prisma.equipment.create({
+      data: {},
     });
+
+    // Create translations
+    for (const translation of equipment.translations) {
+      await prisma.equipmentTranslation.create({
+        data: {
+          equipmentId: createdEquipment.equipmentId,
+          locale: translation.locale,
+          label: translation.label,
+        },
+      });
+    }
   }
   console.log('✅ Equipment seeding completed!');
 }

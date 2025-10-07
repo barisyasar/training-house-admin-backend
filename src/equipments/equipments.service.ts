@@ -7,13 +7,17 @@ export class EquipmentsService {
 
   async getAllEquipmentsMinimal() {
     return this.prisma.equipment.findMany({
-      orderBy: {
-        label: 'asc',
-      },
-      /* fields: {
-        label: true,
+      select: {
         equipmentId: true,
-      }, */
+        translations: {
+          where: {
+            locale: 'en-US',
+          },
+          select: {
+            label: true,
+          },
+        },
+      },
     });
   }
 }

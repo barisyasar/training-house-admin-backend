@@ -7,8 +7,7 @@ const prisma = new PrismaClient();
 
 function ensureGifDirectory(exerciseId: string) {
   const gifDir = path.join(
-    __dirname,
-    '..',
+    process.cwd(),
     'public',
     'exercises',
     'gifs',
@@ -25,7 +24,7 @@ function copyGifFiles(
   gifFiles: Record<string, string>,
   oldGif: Record<string, string>,
 ) {
-  const sourceDir = path.join(__dirname, 'exercises-images');
+  const sourceDir = path.join(process.cwd(), 'prisma', 'exercises-images');
   const targetDir = ensureGifDirectory(exerciseId);
 
   if (!fs.existsSync(sourceDir)) {
@@ -98,11 +97,36 @@ async function seedExercises(exercises) {
           })),
         },
         targetBodyParts: {
-          create: targetBodyParts.map((part) => ({
-            targetBodyPart: {
-              connect: { value: part.value },
-            },
-          })),
+          create: await Promise.all(
+            targetBodyParts.map(async (part) => {
+              // Find target body part by its English translation
+              const targetBodyPart = await prisma.targetBodyPart.findFirst({
+                where: {
+                  translations: {
+                    some: {
+                      locale: 'en-US',
+                      label: {
+                        mode: 'insensitive',
+                        equals: part.value,
+                      },
+                    },
+                  },
+                },
+              });
+
+              if (!targetBodyPart) {
+                throw new Error(`Target body part not found: ${part.value}`);
+              }
+
+              return {
+                targetBodyPart: {
+                  connect: {
+                    targetBodyPartId: targetBodyPart.targetBodyPartId,
+                  },
+                },
+              };
+            }),
+          ),
         },
         gifs: {
           create: Object.entries(gif).map(([size, filename]) => ({
