@@ -1,15 +1,23 @@
 import { IsArray, IsOptional } from 'class-validator';
 import { PaginationQueryDto } from 'src/common/dto/pagination.dto';
-import { MeasurementType } from '@prisma/client';
 import { Transform } from 'class-transformer';
 
-export class ExercisePaginationDto extends PaginationQueryDto {
+export class PublicWorkoutPaginationDto extends PaginationQueryDto {
   @IsOptional()
   @Transform(({ value }) => {
     if (!value) return [];
     if (Array.isArray(value)) return value;
-    return [value]; // wrap single string into array
+    return [value];
   })
   @IsArray()
-  measurementTypes?: MeasurementType[];
+  levels?: string[];
+
+  @IsOptional()
+  @Transform(({ value }) => {
+    if (!value) return [];
+    if (Array.isArray(value)) return value;
+    return [value];
+  })
+  @IsArray()
+  plans?: string[];
 }

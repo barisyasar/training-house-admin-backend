@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import type { TExercise } from '../types/exercise.types';
 import { CreateExerciseDto } from './dto/create-exercise.dto';
 import { Prisma } from '@prisma/client';
 import { promises as fs } from 'fs';

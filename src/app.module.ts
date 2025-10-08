@@ -7,6 +7,8 @@ import { EquipmentsModule } from './equipments/equipments.module';
 import { TargetBodyPartsModule } from './target-body-parts/target-body-parts.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { PublicWorkoutModule } from './public-workouts/public-workout.module';
+import { CategoriesModule } from './categories/categories.module';
 
 @Module({
   imports: [
@@ -22,6 +24,8 @@ import { join } from 'path';
         fallthrough: true,
       },
     }),
+    PublicWorkoutModule,
+    CategoriesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

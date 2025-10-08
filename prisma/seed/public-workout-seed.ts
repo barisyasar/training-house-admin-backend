@@ -115,12 +115,12 @@ async function seedPublicWorkouts() {
       translations: {
         create: [
           {
-            locale: 'en',
+            locale: 'en-US',
             name: `Workout ${i + 1}`,
             desc: `Workout ${i + 1} description`,
           },
           {
-            locale: 'tr',
+            locale: 'tr-Tr',
             name: `Antrenman ${i + 1}`,
             desc: `Antrenman ${i + 1} açıklaması`,
           },

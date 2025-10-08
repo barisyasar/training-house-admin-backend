@@ -1,33 +1,34 @@
 import { PrismaClient } from '@prisma/client';
+import { randomUUID } from 'crypto';
 
 const prisma = new PrismaClient();
 
 async function seedPlans() {
   const plans = [
     {
-      planId: 'free',
+      planId: randomUUID(),
       translations: {
         create: [
-          { locale: 'tr-TR', label: 'Ücretsiz' },
-          { locale: 'en-US', label: 'Free' },
+          { locale: 'tr-TR', label: 'ücretsiz' },
+          { locale: 'en-US', label: 'free' },
         ],
       },
     },
     {
-      planId: 'gold',
+      planId: randomUUID(),
       translations: {
         create: [
-          { locale: 'tr-TR', label: 'Altın' },
-          { locale: 'en-US', label: 'Gold' },
+          { locale: 'tr-TR', label: 'altın' },
+          { locale: 'en-US', label: 'gold' },
         ],
       },
     },
     {
-      planId: 'platinum',
+      planId: randomUUID(),
       translations: {
         create: [
-          { locale: 'tr-TR', label: 'Platin' },
-          { locale: 'en-US', label: 'Platinum' },
+          { locale: 'tr-TR', label: 'platin' },
+          { locale: 'en-US', label: 'platinum' },
         ],
       },
     },
