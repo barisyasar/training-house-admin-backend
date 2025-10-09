@@ -3,7 +3,6 @@ import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { LanguageCode } from 'src/types/language-code.enum';
-import { sleep } from 'src/common/utils/sleep.util';
 
 @Injectable()
 export class CategoriesService {
@@ -14,7 +13,6 @@ export class CategoriesService {
   }
 
   async findAllMinimal() {
-    await sleep(3000);
     return this.prisma.category.findMany({
       select: {
         categoryId: true,

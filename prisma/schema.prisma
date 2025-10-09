@@ -295,6 +295,11 @@ model PublicWorkoutExercise {
   publicWorkoutExerciseId String @id @default(cuid())
   publicWorkoutId String
   exerciseId String
+  orderNumber Int
+  measurementType String
+  duration        Int
+  reps            Int
+  type String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

@@ -41,7 +41,7 @@ async function seedPublicWorkouts() {
 
   // Get random exercises with full details
   const exercises = await prisma.exercise.findMany({
-    take: 10,
+    take: 12,
     orderBy: {
       createdAt: 'desc',
     },
@@ -60,6 +60,7 @@ async function seedPublicWorkouts() {
       },
     },
   });
+  console.log(exercises);
 
   const plans = await prisma.plan.findMany({
     take: 1,
@@ -126,9 +127,17 @@ async function seedPublicWorkouts() {
           },
         ],
       },
+
       exercises: {
-        create: exercises.map((ex) => ({
-          exerciseId: ex.exerciseId,
+        create: exercises.map((ex, index) => ({
+          exercise: {
+            connect: { exerciseId: ex.exerciseId },
+          },
+          orderNumber: index + 1, // Assign an order number starting from 1
+          measurementType: ex.measurementType,
+          duration: ex.measurementType === 'time' ? (ex.duration ?? 0) : 0, // Use 0 instead of null
+          reps: ex.measurementType === 'reps' ? (ex.reps ?? 0) : 0, // Use 0 instead of null
+          type: ex.type,
         })),
       },
       banner: {

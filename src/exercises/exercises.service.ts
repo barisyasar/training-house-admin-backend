@@ -256,6 +256,27 @@ export class ExercisesService {
     };
   }
 
+  async findAllMinimal() {
+    return this.prisma.exercise.findMany({
+      select: {
+        exerciseId: true,
+        reps: true,
+        duration: true,
+        isEachSide: true,
+        measurementType: true,
+        translations: { where: { locale: LanguageCode.EN_US } },
+        gifs: {
+          select: {
+            url: true,
+          },
+          where: {
+            size: 360,
+          },
+        },
+      },
+    });
+  }
+
   async updateExercise(
     exerciseId: string,
     exerciseData: UpdateExerciseDto,

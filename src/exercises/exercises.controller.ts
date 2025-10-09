@@ -43,6 +43,10 @@ export class ExercisesController {
 
     return this.exercisesService.createExercise(exerciseData, gifFiles);
   }
+  @Get('minimal')
+  findAllMinimal() {
+    return this.exercisesService.findAllMinimal();
+  }
 
   @Get()
   findAll(@Query() query: ExercisePaginationDto) {

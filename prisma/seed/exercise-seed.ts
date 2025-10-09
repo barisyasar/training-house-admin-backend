@@ -49,6 +49,31 @@ function copyGifFiles(
 
 async function seedExercises(exercises) {
   console.log('Creating exercises...');
+
+  console.log('Processing rest');
+  await prisma.exercise.create({
+    data: {
+      exerciseId: randomUUID(),
+      type: 'rest',
+      measurementType: 'time',
+      duration: 20,
+      translations: {
+        create: [
+          {
+            locale: 'en-US',
+            name: 'Rest',
+            desc: 'Rest for 20 seconds',
+          },
+          {
+            locale: 'tr-TR',
+            name: 'Dinlenme',
+            desc: '20 saniye dinlenme',
+          },
+        ],
+      },
+    },
+  });
+
   for (const exercise of exercises) {
     const exerciseId = randomUUID();
     console.log(`🏋️ Processing exercise with ID: ${exerciseId}`);
@@ -137,6 +162,7 @@ async function seedExercises(exercises) {
       },
     });
   }
+
   console.log('✅ Exercises seeding completed!');
 }
 
