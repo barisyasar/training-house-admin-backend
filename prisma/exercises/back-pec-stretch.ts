@@ -30,10 +30,10 @@ export const BACK_PEC_STRETCH = {
   ],
   targetBodyParts: [{ value: 'back' }],
   gif: {
-    '180': 'back-pec-stretch-180.gif',
-    '360': 'back-pec-stretch-360.gif',
-    '720': 'back-pec-stretch-720.gif',
-    '1080': 'back-pec-stretch-1080.gif',
+    1: 'back-pec-stretch_1.gif',
+    2: 'back-pec-stretch_2.gif',
+    3: 'back-pec-stretch_3.gif',
+    4: 'back-pec-stretch_4.gif',
   },
 
   createdAt: '2025-09-23T12:18:10.722Z',

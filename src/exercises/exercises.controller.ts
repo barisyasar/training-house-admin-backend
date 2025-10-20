@@ -39,6 +39,7 @@ export class ExercisesController {
     @Body('exercise') exerciseDataString: string,
     @UploadedFiles() gifFiles?: Express.Multer.File[],
   ) {
+    console.log(exerciseDataString);
     const exerciseData: CreateExerciseDto = JSON.parse(exerciseDataString);
 
     return this.exercisesService.createExercise(exerciseData, gifFiles);

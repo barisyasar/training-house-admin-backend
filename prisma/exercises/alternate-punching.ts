@@ -30,10 +30,10 @@ export const ALTERNATE_PUNCHING = {
   ],
   targetBodyParts: [{ value: 'core' }],
   gif: {
-    '180': 'alternate-punching-180.gif',
-    '360': 'alternate-punching-360.gif',
-    '720': 'alternate-punching-720.gif',
-    '1080': 'alternate-punching-1080.gif',
+    1: 'alternate-punching_1.gif',
+    2: 'alternate-punching_2.gif',
+    3: 'alternate-punching_3.gif',
+    4: 'alternate-punching_4.gif',
   },
 
   createdAt: '2025-09-23T12:18:10.721Z',

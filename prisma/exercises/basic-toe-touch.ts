@@ -30,10 +30,10 @@ export const BASIC_TOE_TOUCH = {
   ],
   targetBodyParts: [{ value: 'core' }],
   gif: {
-    '180': 'basic-toe-touch-180.gif',
-    '360': 'basic-toe-touch-360.gif',
-    '720': 'basic-toe-touch-720.gif',
-    '1080': 'basic-toe-touch-1080.gif',
+    1: 'basic-toe-touch_1.gif',
+    2: 'basic-toe-touch_2.gif',
+    3: 'basic-toe-touch_3.gif',
+    4: 'basic-toe-touch_4.gif',
   },
 
   createdAt: '2025-09-23T12:18:10.722Z',

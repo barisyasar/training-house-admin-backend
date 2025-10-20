@@ -30,10 +30,10 @@ export const BENT_LEG_KICKBACK_KNEELING_LEFT = {
   ],
   targetBodyParts: [{ value: 'back' }, { value: 'legs' }, { value: 'glutes' }],
   gif: {
-    '180': 'bent-leg-kickback-kneeling-left-180.gif',
-    '360': 'bent-leg-kickback-kneeling-left-360.gif',
-    '720': 'bent-leg-kickback-kneeling-left-720.gif',
-    '1080': 'bent-leg-kickback-kneeling-left-1080.gif',
+    1: 'bent-leg-kickback-kneeling-left_1.gif',
+    2: 'bent-leg-kickback-kneeling-left_2.gif',
+    3: 'bent-leg-kickback-kneeling-left_3.gif',
+    4: 'bent-leg-kickback-kneeling-left_4.gif',
   },
 
   createdAt: '2025-09-23T12:18:10.722Z',

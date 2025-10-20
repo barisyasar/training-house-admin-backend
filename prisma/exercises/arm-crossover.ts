@@ -30,10 +30,10 @@ export const ARM_CROSSOVER = {
   ],
   targetBodyParts: [{ value: 'core' }],
   gif: {
-    '180': 'arm-crossover-180.gif',
-    '360': 'arm-crossover-360.gif',
-    '720': 'arm-crossover-720.gif',
-    '1080': 'arm-crossover-1080.gif',
+    1: 'arm-crossover_1.gif',
+    2: 'arm-crossover_2.gif',
+    3: 'arm-crossover_3.gif',
+    4: 'arm-crossover_4.gif',
   },
 
   createdAt: '2025-09-23T12:18:10.722Z',

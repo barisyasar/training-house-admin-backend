@@ -35,7 +35,7 @@ async function seedPublicWorkouts() {
       workoutImagesDir,
       workoutImages[sourceImageIndex],
     );
-    const targetImage = path.join(targetDir, '720.jpeg');
+    const targetImage = path.join(targetDir, `1_${Date.now()}.jpeg`);
     await fs.copyFile(sourceImage, targetImage);
   }
 
@@ -60,12 +60,16 @@ async function seedPublicWorkouts() {
       },
     },
   });
-  console.log(exercises);
 
   const plans = await prisma.plan.findMany({
     take: 1,
     select: { planId: true },
   });
+
+  if (!plans.length) {
+    console.log('⚠️ No plans found, skipping public workouts seeding');
+    return;
+  }
 
   const categories = await prisma.category.findMany({
     take: 2,
@@ -140,10 +144,10 @@ async function seedPublicWorkouts() {
           type: ex.type,
         })),
       },
-      banner: {
+      banners: {
         create: {
-          size: 720,
-          url: `/public/public-workouts/banners/${workoutId}/720.jpeg`,
+          order: 1, // First banner
+          url: `/public/public-workouts/banners/${workoutId}/1_${Date.now()}.jpeg`,
         },
       },
     };

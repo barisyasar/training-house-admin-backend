@@ -31,7 +31,7 @@ export type TExerciseCommon = TExerciseBase & {
   equipments: TExerciseEquipment[];
   targetBodyParts: TTargetBodyPart[];
   gifs: {
-    size: 180 | 360 | 720 | 1080;
+    order: number;
     url: string;
   }[];
   createdAt: string;

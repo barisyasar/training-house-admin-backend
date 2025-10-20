@@ -5,7 +5,6 @@ const prisma = new PrismaClient();
 async function seedGoals() {
   const goals = [
     {
-      goalId: 'weight-loss',
       translations: {
         create: [
           { locale: 'tr-TR', label: 'Kilo Kaybı' },
@@ -14,7 +13,6 @@ async function seedGoals() {
       },
     },
     {
-      goalId: 'muscle-gain',
       translations: {
         create: [
           { locale: 'tr-TR', label: 'Kas Kazanımı' },
@@ -23,7 +21,6 @@ async function seedGoals() {
       },
     },
     {
-      goalId: 'strength',
       translations: {
         create: [
           { locale: 'tr-TR', label: 'Güç' },

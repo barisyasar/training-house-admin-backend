@@ -50,7 +50,7 @@ async function main() {
   await seedGoals();
   await seedPlans();
   await seedExercises(exercises);
-  await seedPublicWorkouts();
+  // await seedPublicWorkouts();
 
   console.log('✅ Seed completed successfully!');
 }

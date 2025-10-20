@@ -1,12 +1,10 @@
 import { PrismaClient } from '@prisma/client';
-import { randomUUID } from 'crypto';
 
 const prisma = new PrismaClient();
 
 async function seedCategories() {
   const categories = [
     {
-      categoryId: randomUUID(),
       translations: {
         create: [
           { locale: 'tr-TR', label: 'Kardiyo' },
@@ -15,7 +13,6 @@ async function seedCategories() {
       },
     },
     {
-      categoryId: randomUUID(),
       translations: {
         create: [
           { locale: 'tr-TR', label: 'Güç' },
@@ -24,7 +21,6 @@ async function seedCategories() {
       },
     },
     {
-      categoryId: randomUUID(),
       translations: {
         create: [
           { locale: 'tr-TR', label: 'Esneme' },
@@ -33,7 +29,6 @@ async function seedCategories() {
       },
     },
     {
-      categoryId: randomUUID(),
       translations: {
         create: [
           { locale: 'tr-TR', label: 'Yoga' },

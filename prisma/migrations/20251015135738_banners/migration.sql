@@ -111,7 +111,7 @@ CREATE TABLE "exercise_target_body_parts" (
 CREATE TABLE "exercise_gifs" (
     "exerciseGifId" TEXT NOT NULL,
     "exerciseId" TEXT NOT NULL,
-    "size" INTEGER NOT NULL,
+    "size" TEXT NOT NULL,
     "url" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -213,7 +213,7 @@ CREATE TABLE "public_workout_translations" (
 CREATE TABLE "public_workout_banners" (
     "publicWorkoutBannerId" TEXT NOT NULL,
     "publicWorkoutId" TEXT NOT NULL,
-    "size" INTEGER NOT NULL,
+    "size" TEXT NOT NULL,
     "url" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -230,6 +230,7 @@ CREATE TABLE "public_workout_exercises" (
     "measurementType" TEXT NOT NULL,
     "duration" INTEGER NOT NULL,
     "reps" INTEGER NOT NULL,
+    "type" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 

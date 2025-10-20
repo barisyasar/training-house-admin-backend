@@ -30,10 +30,10 @@ export const ALL_FOURS_SQUAD_STRETCH_RIGHT = {
   ],
   targetBodyParts: [{ value: 'core' }],
   gif: {
-    '180': 'all-fours-squad-stretch-right-180.gif',
-    '360': 'all-fours-squad-stretch-right-360.gif',
-    '720': 'all-fours-squad-stretch-right-720.gif',
-    '1080': 'all-fours-squad-stretch-right-1080.gif',
+    1: 'all-fours-squad-stretch-right_1.gif',
+    2: 'all-fours-squad-stretch-right_2.gif',
+    3: 'all-fours-squad-stretch-right_3.gif',
+    4: 'all-fours-squad-stretch-right_4.gif',
   },
 
   createdAt: '2025-09-23T12:18:10.716Z',

@@ -3,7 +3,7 @@
 /node_modules
 /build
 /public
-
+/prisma/exercises-images
 # Logs
 logs
 *.log

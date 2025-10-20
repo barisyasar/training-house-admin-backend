@@ -21,7 +21,7 @@ enum MeasurementType {
 }
 
 model Exercise {
-  exerciseId             String          @id @default(cuid())
+  exerciseId             String          @id @default(uuid())
   type           ExerciseType
   measurementType MeasurementType
   duration       Int?            // for time-based exercises and rest
@@ -41,7 +41,7 @@ model Exercise {
 }
 
 model ExerciseTranslation {
-  exerciseTranslationId          String       @id @default(cuid())
+  exerciseTranslationId          String       @id @default(uuid())
   exerciseId  String
   locale      String
   name        String
@@ -58,7 +58,7 @@ model ExerciseTranslation {
 }
 
 model ExerciseStep {
-  exerciseStepId                    String               @id @default(cuid())
+  exerciseStepId                    String               @id @default(uuid())
   exerciseTranslationId String
   value                 String
   order                 Int
@@ -72,7 +72,7 @@ model ExerciseStep {
 }
 
 model Equipment {
-  equipmentId    String   @id @default(cuid())
+  equipmentId    String   @id @default(uuid())
   translations EquipmentTranslation[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -84,7 +84,7 @@ model Equipment {
 }
 
 model EquipmentTranslation {
-  equipmentTranslationId String @id @default(cuid())
+  equipmentTranslationId String @id @default(uuid())
   equipmentId String
   locale String
   label String
@@ -99,7 +99,7 @@ model EquipmentTranslation {
 }
 
 model ExerciseEquipment {
-  exerciseEquipmentId         String   @id @default(cuid())
+  exerciseEquipmentId         String   @id @default(uuid())
   exerciseId String
   equipmentId String
   createdAt  DateTime @default(now())
@@ -113,7 +113,7 @@ model ExerciseEquipment {
 }
 
 model TargetBodyPart {
-  targetBodyPartId    String   @id @default(cuid())
+  targetBodyPartId    String   @id @default(uuid())
   translations TargetBodyPartTranslation[]
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
@@ -125,7 +125,7 @@ model TargetBodyPart {
 }
 
 model TargetBodyPartTranslation {
-  targetBodyPartTranslationId String @id @default(cuid())
+  targetBodyPartTranslationId String @id @default(uuid())
   targetBodyPartId String
   locale String
   label String
@@ -140,7 +140,7 @@ model TargetBodyPartTranslation {
 }
 
 model ExerciseTargetBodyPart {
-  exerciseTargetBodyPartId                String          @id @default(cuid())
+  exerciseTargetBodyPartId                String          @id @default(uuid())
   exerciseId        String
   targetBodyPartId  String
   createdAt         DateTime        @default(now())
@@ -154,9 +154,9 @@ model ExerciseTargetBodyPart {
 }
 
 model ExerciseGif {
-  exerciseGifId         String   @id @default(cuid())
+  exerciseGifId         String   @id @default(uuid())
   exerciseId String
-  size       Int      // 180, 360, 720, 1080
+  order      Int
   url        String
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
@@ -168,7 +168,7 @@ model ExerciseGif {
 }
 
 model Category {
-  categoryId String @id @default(cuid())
+  categoryId String @id @default(uuid())
   translations CategoryTranslation[]
   publicWorkouts PublicWorkout[]
   createdAt DateTime @default(now())
@@ -178,7 +178,7 @@ model Category {
 }
 
 model CategoryTranslation {
-  categoryTranslationId String @id @default(cuid())
+  categoryTranslationId String @id @default(uuid())
   categoryId String
   locale String
   label String
@@ -193,7 +193,7 @@ model CategoryTranslation {
 }
 
 model Goal {
-  goalId String @id @default(cuid())
+  goalId String @id @default(uuid())
   translations GoalTranslation[]
   publicWorkouts PublicWorkout[]
   createdAt DateTime @default(now())
@@ -203,7 +203,7 @@ model Goal {
 }
 
 model GoalTranslation {
-  goalTranslationId String @id @default(cuid())
+  goalTranslationId String @id @default(uuid())
   goalId String
   locale String
   label String
@@ -218,7 +218,7 @@ model GoalTranslation {
 }
 
 model Plan {
-  planId String @id @default(cuid())
+  planId String @id @default(uuid())
   translations PlanTranslation[]
   publicWorkouts PublicWorkout[]
   createdAt DateTime @default(now())
@@ -228,7 +228,7 @@ model Plan {
 }
 
 model PlanTranslation {
-  planTranslationId String @id @default(cuid())
+  planTranslationId String @id @default(uuid())
   planId String
   locale String
   label String
@@ -243,12 +243,12 @@ model PlanTranslation {
 }
 
 model PublicWorkout {
-  publicWorkoutId String @id @default(cuid())
+  publicWorkoutId String @id @default(uuid())
   translations PublicWorkoutTranslation[]
   duration Int
   calories Int
   level String
-  banner PublicWorkoutBanner[]
+  banners PublicWorkoutBanner[]
   categories Category[]
   goals Goal[]
   planId String
@@ -262,7 +262,7 @@ model PublicWorkout {
 }
 
 model PublicWorkoutTranslation {
-  publicWorkoutTranslationId String @id @default(cuid())
+  publicWorkoutTranslationId String @id @default(uuid())
   publicWorkoutId String
   locale String
   name String
@@ -278,9 +278,9 @@ model PublicWorkoutTranslation {
 }
 
 model PublicWorkoutBanner {
-  publicWorkoutBannerId String @id @default(cuid())
+  publicWorkoutBannerId String @id @default(uuid())
   publicWorkoutId String
-  size Int
+  order Int
   url String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -292,7 +292,7 @@ model PublicWorkoutBanner {
 }
 
 model PublicWorkoutExercise {
-  publicWorkoutExerciseId String @id @default(cuid())
+  publicWorkoutExerciseId String @id @default(uuid())
   publicWorkoutId String
   exerciseId String
   orderNumber Int

@@ -30,10 +30,10 @@ export const ASSISTED_ROTATING_NECK_STRETCH_RIGHT = {
   ],
   targetBodyParts: [{ value: 'neck' }],
   gif: {
-    '180': 'assisted-rotating-neck-stretch-right-180.gif',
-    '360': 'assisted-rotating-neck-stretch-right-360.gif',
-    '720': 'assisted-rotating-neck-stretch-right-720.gif',
-    '1080': 'assisted-rotating-neck-stretch-right-1080.gif',
+    1: 'assisted-rotating-neck-stretch-right_1.gif',
+    2: 'assisted-rotating-neck-stretch-right_2.gif',
+    3: 'assisted-rotating-neck-stretch-right_3.gif',
+    4: 'assisted-rotating-neck-stretch-right_4.gif',
   },
 
   createdAt: '2025-09-23T12:18:10.722Z',

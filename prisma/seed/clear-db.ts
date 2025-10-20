@@ -9,21 +9,26 @@ async function cleanDatabase() {
 
   // Clean public directories
   const gifsDir = path.join(process.cwd(), 'public', 'exercises', 'gifs');
-  const bannersDir = path.join(
+  const publicWorkoutsDir = path.join(
     process.cwd(),
     'public',
     'public-workouts',
-    'banners',
   );
+
+  // Clean exercise gifs
   if (fs.existsSync(gifsDir)) {
     fs.rmSync(gifsDir, { recursive: true, force: true });
     console.log('🗑️  Cleaned exercise gifs directory');
   }
 
-  if (fs.existsSync(bannersDir)) {
-    fs.rmSync(bannersDir, { recursive: true, force: true });
-    console.log('🗑️  Cleaned public workouts banners directory');
+  // Clean public workouts directory (contains workout-specific banner folders)
+  if (fs.existsSync(publicWorkoutsDir)) {
+    fs.rmSync(publicWorkoutsDir, { recursive: true, force: true });
+    console.log('🗑️  Cleaned public workouts directory');
   }
+
+  // Recreate the public workouts directory
+  fs.mkdirSync(publicWorkoutsDir, { recursive: true });
 
   // Delete in reverse order of dependencies
   // Clean public workouts and related data

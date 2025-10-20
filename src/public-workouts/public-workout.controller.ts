@@ -7,19 +7,43 @@ import {
   Param,
   Delete,
   Query,
+  UseInterceptors,
+  UploadedFiles,
 } from '@nestjs/common';
 import { PublicWorkoutService } from './public-workout.service';
 import { CreatePublicWorkoutDto } from './dto/create-public-workout.dto';
 import { UpdatePublicWorkoutDto } from './dto/update-public-workout.dto';
 import { PublicWorkoutPaginationDto } from './dto/public-workout-pagination.dto';
+import { FilesInterceptor } from '@nestjs/platform-express';
 
 @Controller('public-workouts')
 export class PublicWorkoutController {
   constructor(private readonly publicWorkoutService: PublicWorkoutService) {}
 
   @Post()
-  create(@Body() createPublicWorkoutDto: CreatePublicWorkoutDto) {
-    return this.publicWorkoutService.create(createPublicWorkoutDto);
+  @UseInterceptors(
+    FilesInterceptor('banners', 1, {
+      fileFilter: (req, file, cb) => {
+        if (file.mimetype === 'image/jpeg') {
+          cb(null, true);
+        } else {
+          cb(new Error('Only JPEG files are allowed'), false);
+        }
+      },
+      limits: {
+        fileSize: 10 * 1024 * 1024,
+      },
+    }),
+  )
+  create(
+    @Body('publicWorkout') createPublicWorkoutDto: string,
+    @UploadedFiles() banners: Express.Multer.File[],
+  ) {
+    const publicWorkoutData: CreatePublicWorkoutDto = JSON.parse(
+      createPublicWorkoutDto,
+    );
+
+    return this.publicWorkoutService.create(publicWorkoutData, banners);
   }
 
   @Get()
@@ -27,21 +51,35 @@ export class PublicWorkoutController {
     return this.publicWorkoutService.findAll(query);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.publicWorkoutService.findOne(+id);
+  @Get(':publicWorkoutId')
+  findOne(@Param('publicWorkoutId') publicWorkoutId: string) {
+    return this.publicWorkoutService.findOne(publicWorkoutId);
   }
 
-  @Patch(':id')
+  @Patch(':publicWorkoutId')
+  @UseInterceptors(
+    FilesInterceptor('banners', 1, {
+      fileFilter: (req, file, cb) => {
+        if (file.mimetype === 'image/jpeg') {
+          cb(null, true);
+        } else {
+          cb(new Error('Only JPEG files are allowed'), false);
+        }
+      },
+    }),
+  )
   update(
-    @Param('id') id: string,
-    @Body() updatePublicWorkoutDto: UpdatePublicWorkoutDto,
+    @Param('publicWorkoutId') publicWorkoutId: string,
+    @Body('publicWorkout') updatePublicWorkoutDto: string,
+    @UploadedFiles() banners: Express.Multer.File[],
   ) {
-    return this.publicWorkoutService.update(+id, updatePublicWorkoutDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.publicWorkoutService.remove(+id);
+    const publicWorkoutData: UpdatePublicWorkoutDto = JSON.parse(
+      updatePublicWorkoutDto,
+    );
+    return this.publicWorkoutService.update(
+      publicWorkoutId,
+      publicWorkoutData,
+      banners,
+    );
   }
 }

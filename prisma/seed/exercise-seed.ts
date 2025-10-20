@@ -32,8 +32,8 @@ function copyGifFiles(
     return;
   }
 
-  Object.entries(gifFiles).forEach(([size, newFilename]) => {
-    const oldFilename = oldGif[size];
+  Object.entries(gifFiles).forEach(([order, newFilename]) => {
+    const oldFilename = oldGif[order];
     if (oldFilename) {
       const sourcePath = path.join(sourceDir, oldFilename);
       const targetPath = path.join(targetDir, newFilename);
@@ -74,6 +74,7 @@ async function seedExercises(exercises) {
     },
   });
 
+  console.log('Processing exercises');
   for (const exercise of exercises) {
     const exerciseId = randomUUID();
     console.log(`🏋️ Processing exercise with ID: ${exerciseId}`);
@@ -88,13 +89,16 @@ async function seedExercises(exercises) {
       isEachSide = false,
     } = exercise;
 
-    const gif = Object.entries(oldGif).reduce<Record<string, string>>(
-      (acc, [size, filename]) => {
-        acc[size] = `${size}x${size}.gif`;
-        return acc;
-      },
-      {},
-    );
+    const gif = oldGif
+      ? Object.entries(oldGif).reduce<Record<string, string>>(
+          (acc, [order, filename], index) => {
+            const timestamp = Date.now();
+            acc[index + 1] = `${index + 1}_${timestamp}.gif`;
+            return acc;
+          },
+          {},
+        )
+      : {};
 
     copyGifFiles(exerciseId, gif, oldGif);
 
@@ -116,7 +120,7 @@ async function seedExercises(exercises) {
             steps: {
               create: trans.steps.map((step, index) => ({
                 value: step,
-                order: index,
+                order: index + 1,
               })),
             },
           })),
@@ -154,8 +158,8 @@ async function seedExercises(exercises) {
           ),
         },
         gifs: {
-          create: Object.entries(gif).map(([size, filename]) => ({
-            size: parseInt(size),
+          create: Object.entries(gif).map(([order, filename]) => ({
+            order: parseInt(order),
             url: `/public/exercises/gifs/${exerciseId}/${filename}`,
           })),
         },

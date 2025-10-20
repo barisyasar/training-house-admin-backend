@@ -20,7 +20,10 @@ export class ExercisesService {
   ): Promise<any> {
     // Generate unique exerciseId
     const exerciseId = randomUUID();
-    const gifUrls: { size: 180 | 360 | 720 | 1080; url: string }[] = [];
+    const gifUrls: {
+      order: number;
+      url: string;
+    }[] = [];
 
     if (gifFiles && gifFiles.length > 0) {
       const exerciseDir = join(
@@ -37,13 +40,12 @@ export class ExercisesService {
         const filePath = join(exerciseDir, fileName);
         await fs.writeFile(filePath, file.buffer);
 
-        const sizeMatch = fileName.match(/(\d+)/);
-        const size = sizeMatch
-          ? (parseInt(sizeMatch[1]) as 180 | 360 | 720 | 1080)
-          : 360;
+        // Extract order number from filename (e.g., "something_1.gif" -> 1)
+        const orderMatch = fileName.match(/_(\d+)\.gif$/);
+        const order = orderMatch ? parseInt(orderMatch[1]) : 1;
 
         gifUrls.push({
-          size,
+          order,
           url: `/public/exercises/gifs/${exerciseId}/${fileName}`,
         });
       }
@@ -102,7 +104,7 @@ export class ExercisesService {
           gifUrls.length > 0
             ? {
                 create: gifUrls.map((gif) => ({
-                  size: gif.size,
+                  order: gif.order,
                   url: gif.url,
                 })),
               }
@@ -128,15 +130,27 @@ export class ExercisesService {
   async getExerciseById(exerciseId: string): Promise<any> {
     return this.prisma.exercise.findUnique({
       where: { exerciseId },
-      include: {
+      select: {
+        exerciseId: true,
         translations: {
-          include: {
-            steps: true,
-          },
-          orderBy: {
-            locale: 'desc',
+          select: {
+            locale: true,
+            name: true,
+            desc: true,
+            steps: {
+              select: {
+                value: true,
+              },
+              orderBy: {
+                order: 'asc',
+              },
+            },
           },
         },
+        measurementType: true,
+        duration: true,
+        reps: true,
+        isEachSide: true,
         equipments: {
           select: {
             equipmentId: true,
@@ -148,8 +162,12 @@ export class ExercisesService {
           },
         },
         gifs: {
+          select: {
+            order: true,
+            url: true,
+          },
           orderBy: {
-            size: 'asc',
+            order: 'asc',
           },
         },
       },
@@ -161,7 +179,7 @@ export class ExercisesService {
       pageIndex = 0,
       pageSize = 20,
       search = '',
-      sortBy = 'exerciseId',
+      sortBy = 'createdAt',
       sortOrder = 'asc',
       measurementTypes,
     } = query;
@@ -204,38 +222,22 @@ export class ExercisesService {
         },
         select: {
           exerciseId: true,
-          type: true,
-          measurementType: true,
-          duration: true,
-          reps: true,
-          isEachSide: true,
           createdAt: true,
           translations: {
             where: { locale: LanguageCode.EN_US },
             select: {
-              exerciseTranslationId: true,
-              locale: true,
               name: true,
             },
           },
-          equipments: {
-            select: {
-              equipmentId: true,
-            },
-          },
-          targetBodyParts: {
-            select: {
-              targetBodyPartId: true,
-            },
-          },
+          measurementType: true,
           gifs: {
             select: {
-              size: true,
               url: true,
             },
             orderBy: {
-              size: 'asc',
+              order: 'asc',
             },
+            take: 1,
           },
         },
       }),
@@ -269,9 +271,10 @@ export class ExercisesService {
           select: {
             url: true,
           },
-          where: {
-            size: 360,
+          orderBy: {
+            order: 'asc',
           },
+          take: 1,
         },
       },
     });
@@ -282,7 +285,10 @@ export class ExercisesService {
     exerciseData: UpdateExerciseDto,
     gifFiles?: Express.Multer.File[],
   ): Promise<any> {
-    const gifUrls: { size: 180 | 360 | 720 | 1080; url: string }[] = [];
+    const gifUrls: {
+      order: number;
+      url: string;
+    }[] = [];
 
     const existingGifs = await this.prisma.exerciseGif.findMany({
       where: { exerciseId },
@@ -299,27 +305,40 @@ export class ExercisesService {
       await fs.mkdir(exerciseDir, { recursive: true });
 
       for (const file of gifFiles) {
-        const timestamp = Date.now(); // Use current timestamp as version
-        const fileName = `${file.originalname.split('.')[0]}_${timestamp}.${file.originalname.split('.')[1]}`;
+        const timestamp = Date.now();
+        const orderMatch = file.originalname.match(/_(\d+)\.gif$/);
+        const order = orderMatch ? parseInt(orderMatch[1]) : 1;
+
+        // First, find and remove any existing files with this order
+        const oldFiles = await fs.readdir(exerciseDir);
+        for (const oldFile of oldFiles) {
+          const [fileOrder] = oldFile.split('_');
+          if (fileOrder === order.toString()) {
+            const oldFilePath = join(exerciseDir, oldFile);
+            try {
+              await fs.unlink(oldFilePath);
+            } catch (error) {
+              console.warn(`Failed to delete old gif file: ${oldFilePath}`);
+            }
+          }
+        }
+
+        // Then save the new file with timestamp
+        const fileName = `${order}_${timestamp}.gif`;
         const filePath = join(exerciseDir, fileName);
         await fs.writeFile(filePath, file.buffer);
 
-        const sizeMatch = fileName.match(/(\d+)/);
-        const size = sizeMatch
-          ? (parseInt(sizeMatch[1]) as 180 | 360 | 720 | 1080)
-          : 360;
-
-        // Check if a GIF of this size already exists
-        const existingGif = existingGifs.find((gif) => gif.size === size);
+        // Update database entry
+        const existingGif = existingGifs.find((gif) => gif.order === order);
         if (existingGif) {
-          // Delete the existing GIF entry
+          // Delete the existing GIF entry from database
           await this.prisma.exerciseGif.delete({
             where: { exerciseGifId: existingGif.exerciseGifId },
           });
         }
 
         gifUrls.push({
-          size,
+          order,
           url: `/public/exercises/gifs/${exerciseId}/${fileName}`,
         });
       }
@@ -391,7 +410,7 @@ export class ExercisesService {
           gifUrls.length > 0
             ? {
                 create: gifUrls.map((gif) => ({
-                  size: gif.size,
+                  order: gif.order,
                   url: gif.url,
                 })),
               }
